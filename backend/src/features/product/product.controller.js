@@ -3,7 +3,31 @@ import Product from "./product.model.js";
 const getProducts = async (req,res) => {
     try
     {
-        const products = await Product.find();
+        const {search,category,sort} = req.query; // search = iphone 
+        let query = {}; 
+        if(search) 
+        {
+            query.name = {$regex : search , $options : 'i'}; // name : {$regex : "iphone" , $options : "i"},
+        }
+        if(category)
+        {
+            query.category = category;
+        }
+        let productQuery = Product.find(query);
+       
+        if(sort === 'price_low')
+        {
+            productQuery = productQuery.sort({price : 1});
+        }
+        else if(sort === 'price_high')
+        {
+            productQuery = productQuery.sort({price : -1});
+        }
+        else if(sort === 'latest')
+        {
+            productQuery = productQuery.sort({ createdAt : -1});
+        }
+        const products = await productQuery;
         res.status(200).json(products);
     }
     catch(e)
