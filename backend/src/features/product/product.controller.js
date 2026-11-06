@@ -40,6 +40,7 @@ const createProducts = async (req,res) => {
     try
     {
         const {name , price, category } = req.body;
+        console.log(`${name},${price},${category}`);
         if(!name || !price || !category)
         {
             return res.status(400).json({message : "Name,category and price are required "});
@@ -50,6 +51,7 @@ const createProducts = async (req,res) => {
 
         }
         const product = await Product.create(req.body);
+        console.log(product);
         res.status(201).json(product);
     }
     catch(e)
